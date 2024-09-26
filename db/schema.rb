@@ -49,16 +49,6 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_26_114852) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "company_users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "role", null: false
-    t.uuid "company_id"
-    t.uuid "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["company_id"], name: "index_company_users_on_company_id"
-    t.index ["user_id"], name: "index_company_users_on_user_id"
-  end
-
   create_table "customers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.string "document", null: false
@@ -106,24 +96,25 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_26_114852) do
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "email", null: false
+    t.uuid "company_id"
     t.string "name", null: false
     t.string "document", null: false
     t.string "phone", null: false
     t.string "password_digest", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_users_on_company_id"
   end
 
   add_foreign_key "addresses", "companies"
   add_foreign_key "addresses", "customers"
   add_foreign_key "cart_items", "customers"
   add_foreign_key "cart_items", "products"
-  add_foreign_key "company_users", "companies"
-  add_foreign_key "company_users", "users"
   add_foreign_key "order_items", "orders"
   add_foreign_key "order_items", "products"
   add_foreign_key "orders", "addresses"
   add_foreign_key "orders", "companies"
   add_foreign_key "orders", "customers"
   add_foreign_key "products", "companies"
+  add_foreign_key "users", "companies"
 end

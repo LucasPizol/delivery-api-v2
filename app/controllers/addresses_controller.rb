@@ -3,9 +3,13 @@ class AddressesController < ApplicationController
 
   # GET /addresses
   def index
-    @addresses = Address.all
+    puts @current_user
 
-    render json: @addresses
+    if @current_user[:type] == "user"
+      return render json: Address.where(company_id: @current_user[:company_id])
+    end
+
+    render json: Address.where(customer_id: @current_user[:id])
   end
 
   # GET /addresses/1
