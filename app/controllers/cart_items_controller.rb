@@ -1,9 +1,10 @@
 class CartItemsController < ApplicationController
   before_action :set_cart_item, only: %i[ show update destroy ]
+  before_action -> { authorization([ "customer" ]) }
 
   # GET /cart_items
   def index
-    @cart_items = CartItem.all
+    @cart_items = CartItem.where(customer_id: @current_user[:id])
 
     render json: @cart_items
   end

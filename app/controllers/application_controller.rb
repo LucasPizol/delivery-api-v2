@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::API
   before_action :authorization
 
-  def authorization
+  def authorization(types = [ "user", "customer" ])
     auth = request.headers[:authorization]
 
 
@@ -17,6 +17,10 @@ class ApplicationController < ActionController::API
 
     begin
       decoded = JwtService.new.decode(token).first
+
+      if types.include?(decoded["type"]) == false
+        return render json: { message: "unauthorized" }, status: :unauthorized
+      end
 
       if decoded.nil?
         return render json: { message: "unauthorized" }, status: :unauthorized

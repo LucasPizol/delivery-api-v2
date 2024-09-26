@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
   resources :orders
-  resources :order_items
   resources :cart_items
   resources :products
   resources :addresses
@@ -16,6 +15,9 @@ Rails.application.routes.draw do
   post "register/customer" => "authentication#register_customer"
   get "/me" => "authentication#me"
   get "/products/company/:company_id" => "products#load_by_company"
+
+  put "/users" => "users#update"
+  delete "/users" => "users#destroy"
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.

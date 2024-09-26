@@ -1,15 +1,31 @@
 class OrdersController < ApplicationController
-  before_action :set_order, only: %i[ show update destroy ]
+  before_action :set_order, only: %i[ update ]
+  before_action -> { authorization([ "user" ]) }, except: %i[ index show ]
 
-  # GET /orders
   def index
-    @orders = Order.all
+    if @current_user[:type] === "customer"
+      @orders = Order.where(customer_id: @current_user[:id])
+    elsif @current_user[:type] === "user"
+      @orders = Order.where(company_id: @current_user[:id])
+    end
 
     render json: @orders
   end
 
-  # GET /orders/1
   def show
+    if @current_user[:type] === "customer"
+      @order = Order.where(customer_id: @current_user[:id],
+                            id: params[:id]).first
+
+    elsif @current_user[:type] === "user"
+      @order = Order.where(company_id: @current_user[:id],
+                            id: params[:id]).first
+    end
+
+    if @order.nil?
+      return render json: { error: "Order not found" }, status: :not_found
+    end
+
     render json: @order
   end
 
@@ -33,18 +49,11 @@ class OrdersController < ApplicationController
     end
   end
 
-  # DELETE /orders/1
-  def destroy
-    @order.destroy!
-  end
-
   private
-    # Use callbacks to share common setup or constraints between actions.
     def set_order
       @order = Order.find(params[:id])
     end
 
-    # Only allow a list of trusted parameters through.
     def order_params
       params.require(:order).permit(:status, :address_id, :company_id, :customer_id)
     end

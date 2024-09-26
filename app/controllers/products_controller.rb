@@ -1,6 +1,6 @@
 class ProductsController < ApplicationController
   before_action :set_product, only: %i[ show update destroy ]
-  skip_before_action :authorization, only: %i[show load_by_company]
+  before_action -> { authorization([ "user" ]) }, except: %i[ show load_by_company ]
 
   # GET /products/1
   def show
