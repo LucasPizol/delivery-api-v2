@@ -1,21 +1,15 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  id: MyString
-  email: MyString
   name: MyString
   document: MyString
   phone: MyString
+  email: MyString
   password_digest: <%= BCrypt::Password.create("secret") %>
-  createdAt: 2024-09-26 08:15:05
-  updatedAt: 2024-09-26 08:15:05
 
 two:
-  id: MyString
-  email: MyString
   name: MyString
   document: MyString
   phone: MyString
+  email: MyString
   password_digest: <%= BCrypt::Password.create("secret") %>
-  createdAt: 2024-09-26 08:15:05
-  updatedAt: 2024-09-26 08:15:05

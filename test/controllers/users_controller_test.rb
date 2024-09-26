@@ -12,7 +12,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
 
   test "should create user" do
     assert_difference("User.count") do
-      post users_url, params: { user: { createdAt: @user.createdAt, document: @user.document, email: @user.email, id: @user.id, name: @user.name, password: @user.password, phone: @user.phone, updatedAt: @user.updatedAt } }, as: :json
+      post users_url, params: { user: { createdAt: @user.createdAt, document: @user.document, email: @user.email, id: @user.id, name: @user.name, password: "secret", password_confirmation: "secret", phone: @user.phone, updatedAt: @user.updatedAt } }, as: :json
     end
 
     assert_response :created
@@ -24,7 +24,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update user" do
-    patch user_url(@user), params: { user: { createdAt: @user.createdAt, document: @user.document, email: @user.email, id: @user.id, name: @user.name, password: @user.password, phone: @user.phone, updatedAt: @user.updatedAt } }, as: :json
+    patch user_url(@user), params: { user: { createdAt: @user.createdAt, document: @user.document, email: @user.email, id: @user.id, name: @user.name, password: "secret", password_confirmation: "secret", phone: @user.phone, updatedAt: @user.updatedAt } }, as: :json
     assert_response :success
   end
 
