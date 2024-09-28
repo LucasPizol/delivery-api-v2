@@ -1,8 +1,5 @@
 class CompaniesController < ApplicationController
   before_action :set_company, only: %i[ show update destroy ]
-  before_action -> { authorization([ "user" ]) }, except: %i[ index show ]
-
-
   # GET /companies
   def index
     @companies = Company.all

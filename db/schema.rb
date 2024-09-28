@@ -15,46 +15,19 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_26_114852) do
   enable_extension "plpgsql"
 
   create_table "addresses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "street", null: false
-    t.string "number", null: false
-    t.string "complement"
-    t.string "district", null: false
-    t.string "city", null: false
-    t.string "state", null: false
-    t.string "country", null: false
-    t.string "zipcode", null: false
+    t.string "address"
+    t.string "lat"
+    t.string "lng"
     t.uuid "company_id"
-    t.uuid "customer_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["company_id"], name: "index_addresses_on_company_id"
-    t.index ["customer_id"], name: "index_addresses_on_customer_id"
-  end
-
-  create_table "cart_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.float "quantity", null: false
-    t.uuid "product_id", null: false
-    t.uuid "customer_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["customer_id"], name: "index_cart_items_on_customer_id"
-    t.index ["product_id"], name: "index_cart_items_on_product_id"
   end
 
   create_table "companies", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name", null: false
     t.string "document", null: false
     t.string "phone", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "customers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "name", null: false
-    t.string "document", null: false
-    t.string "phone", null: false
-    t.string "email", null: false
-    t.string "password_digest", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -72,14 +45,14 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_26_114852) do
 
   create_table "orders", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "status", null: false
-    t.uuid "address_id", null: false
+    t.string "address", null: false
+    t.string "lat", null: false
+    t.string "lng", null: false
+    t.string "payment_method", null: false
     t.uuid "company_id", null: false
-    t.uuid "customer_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["address_id"], name: "index_orders_on_address_id"
     t.index ["company_id"], name: "index_orders_on_company_id"
-    t.index ["customer_id"], name: "index_orders_on_customer_id"
   end
 
   create_table "products", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -107,14 +80,9 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_26_114852) do
   end
 
   add_foreign_key "addresses", "companies"
-  add_foreign_key "addresses", "customers"
-  add_foreign_key "cart_items", "customers"
-  add_foreign_key "cart_items", "products"
   add_foreign_key "order_items", "orders"
   add_foreign_key "order_items", "products"
-  add_foreign_key "orders", "addresses"
   add_foreign_key "orders", "companies"
-  add_foreign_key "orders", "customers"
   add_foreign_key "products", "companies"
   add_foreign_key "users", "companies"
 end

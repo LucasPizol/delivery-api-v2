@@ -1,6 +1,4 @@
 class UsersController < ApplicationController
-  before_action -> { authorization([ "user" ]) }
-
   def update
     if @current_user.update(user_params)
       render json: @current_user

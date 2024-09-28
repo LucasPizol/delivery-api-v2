@@ -5,14 +5,13 @@ Rails.application.routes.draw do
   resources :addresses
   resources :company_users
   resources :companies
-  resources :customers
   resources :users
+  resources :order_items
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   #
 
   post "login" => "authentication#login"
-  post "register/user" => "authentication#register_user"
-  post "register/customer" => "authentication#register_customer"
+  post "register/user" => "authentication#register"
   get "/me" => "authentication#me"
   get "/products/company/:company_id" => "products#load_by_company"
 

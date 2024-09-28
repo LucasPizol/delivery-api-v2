@@ -3,13 +3,7 @@ class AddressesController < ApplicationController
 
   # GET /addresses
   def index
-    puts @current_user
-
-    if @current_user[:type] == "user"
-      return render json: Address.where(company_id: @current_user[:company_id])
-    end
-
-    render json: Address.where(customer_id: @current_user[:id])
+      render json: Address.where(company_id: @current_user[:company_id])
   end
 
   # GET /addresses/1
@@ -50,6 +44,6 @@ class AddressesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def address_params
-      params.require(:address).permit(:street, :number, :complement, :district, :city, :state, :country, :zipcode, :company_id, :customer_id)
+      params.require(:address).permit(:street, :number, :complement, :district, :city, :state, :country, :zipcode)
     end
 end

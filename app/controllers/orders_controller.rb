@@ -1,26 +1,14 @@
 class OrdersController < ApplicationController
   before_action :set_order, only: %i[ update ]
-  before_action -> { authorization([ "user" ]) }, except: %i[ index show ]
-
   def index
-    if @current_user[:type] === "customer"
-      @orders = Order.where(customer_id: @current_user[:id])
-    elsif @current_user[:type] === "user"
-      @orders = Order.where(company_id: @current_user[:id])
-    end
+    @orders = Order.where(company_id: @current_user[:company_id])
 
     render json: @orders
   end
 
   def show
-    if @current_user[:type] === "customer"
-      @order = Order.where(customer_id: @current_user[:id],
-                            id: params[:id]).first
-
-    elsif @current_user[:type] === "user"
-      @order = Order.where(company_id: @current_user[:id],
-                            id: params[:id]).first
-    end
+    @order = Order.where(company_id: @current_user[:id],
+                          id: params[:id]).first
 
     if @order.nil?
       return render json: { error: "Order not found" }, status: :not_found
@@ -31,7 +19,31 @@ class OrdersController < ApplicationController
 
   # POST /orders
   def create
-    @order = Order.new(order_params)
+    @order = Order.new(
+      company_id: @current_user[:company_id],
+      status: order_params[:status],
+      address: order_params[:address],
+      lat: order_params[:lat],
+      lng: order_params[:lng],
+      payment_method: order_params[:payment_method]
+    )
+
+    puts order_params
+
+    order_params[:product_ids].each do |product_id|
+      product = Product.find(product_id)
+
+      if product.nil?
+        return render json: { error: "Product not found" }, status: :not_found
+      end
+
+      order_items = OrderItem.new(
+        quantity: 1, price: product.price
+      )
+      order_items.product = product
+      order_items.order = @order
+      order_items.save
+    end
 
     if @order.save
       render json: @order, status: :created, location: @order
@@ -55,6 +67,6 @@ class OrdersController < ApplicationController
     end
 
     def order_params
-      params.require(:order).permit(:status, :address_id, :company_id, :customer_id)
+      params.permit(:status, :address, :lat, :lng, :payment_method, :observation, product_ids: [])
     end
 end
