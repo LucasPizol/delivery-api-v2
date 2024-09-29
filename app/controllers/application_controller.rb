@@ -24,24 +24,28 @@ class ApplicationController < ActionController::API
         return render json: { message: "unauthorized" }, status: :unauthorized
       end
 
-      user = User.find(decoded["id"])
+      begin
+        @user = User.find(decoded["id"])
+      rescue
+        @user = MotorCurier.find(decoded["id"])
+      end
 
-      if user.nil?
+      if @user.nil?
         return render json: { message: "unauthorized" }, status: :unauthorized
       end
 
       @current_user = {
-        id: user[:id],
-        email: user[:email],
-        name: user[:name],
-        company_id: user[:company_id],
+        id: @user[:id],
+        email: @user[:email],
+        name: @user[:name],
+        company_id: @user[:company_id],
         type: "user"
       }
     rescue JWT::DecodeError
-      render json: { message: "unauthorized" }, status: :unauthorized
+      render json: { message: "asdas" }, status: :unauthorized
 
     rescue
-      render json: { message: "unauthorized" }, status: :unauthorized
+      render json: { message: "sss" }, status: :unauthorized
     end
   end
 end

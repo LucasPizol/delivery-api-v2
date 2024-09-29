@@ -7,7 +7,7 @@ class OrdersController < ApplicationController
   end
 
   def show
-    @order = Order.where(company_id: @current_user[:id],
+    @order = Order.where(company_id: @current_user[:company_id],
                           id: params[:id]).first
 
     if @order.nil?

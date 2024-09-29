@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_09_26_114852) do
+ActiveRecord::Schema[7.2].define(version: 2024_09_29_193521) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -30,6 +30,26 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_26_114852) do
     t.string "phone", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "motor_curiers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name", null: false
+    t.string "lat", default: "0"
+    t.string "lng", default: "0"
+    t.string "code", null: false
+    t.uuid "company_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id"], name: "index_motor_curiers_on_company_id"
+  end
+
+  create_table "motorcurier_orders", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "order_id", null: false
+    t.uuid "motor_curier_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["motor_curier_id"], name: "index_motorcurier_orders_on_motor_curier_id"
+    t.index ["order_id"], name: "index_motorcurier_orders_on_order_id"
   end
 
   create_table "order_items", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -80,6 +100,9 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_26_114852) do
   end
 
   add_foreign_key "addresses", "companies"
+  add_foreign_key "motor_curiers", "companies"
+  add_foreign_key "motorcurier_orders", "motor_curiers"
+  add_foreign_key "motorcurier_orders", "orders"
   add_foreign_key "order_items", "orders"
   add_foreign_key "order_items", "products"
   add_foreign_key "orders", "companies"
