@@ -22,7 +22,7 @@ gem "aws-sdk-s3"
 gem "image_processing"
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
-gem "pg", "~> 1.1"
+gem "pg", "~> 1.5.8"
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
