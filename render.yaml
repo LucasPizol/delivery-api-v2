@@ -1,9 +1,3 @@
-databases:
-  - name: mysite
-    databaseName: mysite
-    user: mysite
-    plan: free
-
 services:
   - type: web
     name: mysite
